@@ -88,9 +88,11 @@ class PostController extends Controller
     {
         $post = $this->manager->find($params);
 
-        //TODO:: Vérifier que le token est OK
+        if($post)
+        {
+            $this->manager->postDelete($post);
+        }
 
-        $this->manager->delete($post);
-//        return $this->redirectToRoute('create_post', []);
+        return $this->redirectToRoute('create_post', []);
     }
 }

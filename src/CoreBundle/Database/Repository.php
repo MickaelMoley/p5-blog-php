@@ -13,7 +13,7 @@ class Repository
     protected $class;
     protected $className;
     protected $previousObject;
-    private $fluent;
+    protected $fluent;
 
     private $db;
 
@@ -173,7 +173,7 @@ class Repository
         try {
             return $this->fluent
                 ->deleteFrom($this->currentContext())
-                ->where('id', $object)
+                ->where('id', $object->getId())
                 ->execute();
         }
         catch (\Exception $e )
