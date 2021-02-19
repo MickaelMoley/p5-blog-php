@@ -167,4 +167,18 @@ class Repository
         }
 
     }
+
+    public function delete($object)
+    {
+        try {
+            return $this->fluent
+                ->deleteFrom($this->currentContext())
+                ->where('id', $object)
+                ->execute();
+        }
+        catch (\Exception $e )
+        {
+            return $e->getMessage();
+        }
+    }
 }
