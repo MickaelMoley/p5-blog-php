@@ -3,6 +3,7 @@
 
 namespace App\CoreBundle\Controller;
 use App\CoreBundle\Form\FormBase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Error\LoaderError;
@@ -50,6 +51,16 @@ class Controller
         } catch (LoaderError | RuntimeError | SyntaxError $e) {
             return $e->getMessage();
         }
+    }
+
+    public function redirectToRoute($name, $params = [])
+    {
+        return new RedirectResponse($this->router->generate($name, $params));
+    }
+
+    public function getCurrentRoute()
+    {
+        return $this->router->match();
     }
 
 

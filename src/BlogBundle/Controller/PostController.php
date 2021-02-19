@@ -4,6 +4,7 @@
 namespace App\BlogBundle\Controller;
 
 
+use AltoRouter;
 use App\BlogBundle\Model\Post;
 use App\BlogBundle\Repository\PostRepository;
 use App\CoreBundle\Controller\Controller;
@@ -13,6 +14,14 @@ use Symfony\Component\HttpFoundation\Response;
 class PostController extends Controller
 {
 
+    private $manager;
+
+    public function __construct(Request $request, Response $response, AltoRouter $router)
+    {
+        parent::__construct($request, $response, $router);
+
+        $this->manager = new PostRepository();
+    }
 
     /*
      * Permet de créer un article
@@ -21,7 +30,6 @@ class PostController extends Controller
     {
 
 
-        $postRepo = new PostRepository();
         $post = $post = new Post();
 
         //TODO:: Vérifier que le token est OK
@@ -36,11 +44,8 @@ class PostController extends Controller
 
             $data->setCreatedAt(new \DateTime('now'));
             $data->setUpdatedAt(new \DateTime('now'));
-            $postRepo->persist($data);
-
-            return $this->render('post/edit.html.twig', [
-                'form' => $form->createView()
-            ]);
+            $lastId = $this->manager->persist($data);
+            return $this->redirectToRoute('edit_post',  ['id' => $lastId]);
         }
 
         return $this->render('post/create.html.twig');
@@ -66,14 +71,26 @@ class PostController extends Controller
             $data->setUpdatedAt(new \DateTime('now'));
             $postRepo->persist($data);
 
-            return $this->render('post/edit.html.twig', [
-                'form' => $form->createView()
-            ]);
+            return $this->redirectToRoute('edit_post',  ['id' => $data->getId()]);
         }
 
 
         return $this->render('post/edit.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'route' => $this->getCurrentRoute()
         ]);
+    }
+
+    /*
+     * Permet de supprimer un article
+     */
+    public function delete($params = null)
+    {
+        $post = $this->manager->find($params);
+
+        //TODO:: Vérifier que le token est OK
+
+        $this->manager->delete($post);
+//        return $this->redirectToRoute('create_post', []);
     }
 }

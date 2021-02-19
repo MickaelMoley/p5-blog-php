@@ -29,7 +29,7 @@ routes:
 
   post_controller_delete:
     method: 'GET'
-    path: '/post/:i/delete'
+    path: '/post/[i:id]/delete'
     class: App\BlogBundle\Controller\PostController
     action: delete
     name: delete_post

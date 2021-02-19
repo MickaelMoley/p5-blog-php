@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>Modification d'un article</h1>
-    {% include 'post/form/_form.html.twig' %}
+
+    {% include 'post/form/_form.html.twig' with {'route': route.name}%}
 </body>
 </html>

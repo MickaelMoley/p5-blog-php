@@ -72,6 +72,10 @@ class __TwigTemplate_5d6355be4ec39fec97cb6d7406055554405a1802e117acd596df3492f00
         echo "</textarea>
     </div>
     <button type=\"submit\" name=\"btn_submit\">Enregistrer les modifications</button>
+    <a href=\"/post/";
+        // line 25
+        echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, ($context["form"] ?? null), "id", [], "any", false, false, false, 25), "html", null, true);
+        echo "/delete\" name=\"btn_delete\">Supprimer cette article </a>
 
 </form>";
     }
@@ -88,7 +92,7 @@ class __TwigTemplate_5d6355be4ec39fec97cb6d7406055554405a1802e117acd596df3492f00
 
     public function getDebugInfo()
     {
-        return array (  71 => 22,  62 => 16,  51 => 10,  45 => 7,  37 => 1,);
+        return array (  77 => 25,  71 => 22,  62 => 16,  51 => 10,  45 => 7,  37 => 1,);
     }
 
     public function getSourceContext()
@@ -117,6 +121,7 @@ class __TwigTemplate_5d6355be4ec39fec97cb6d7406055554405a1802e117acd596df3492f00
         <textarea name=\"form[content]\" id=\"\" cols=\"30\" rows=\"10\">{{ form.content }}</textarea>
     </div>
     <button type=\"submit\" name=\"btn_submit\">Enregistrer les modifications</button>
+    <a href=\"/post/{{ form.id }}/delete\" name=\"btn_delete\">Supprimer cette article </a>
 
 </form>", "post/form/_form.html.twig", "/mnt/6AF0C09AF0C06E3F/xampp/htdocs/projets/P5_Blog_Mickael_Moley/src/BlogBundle/View/post/form/_form.html.twig");
     }

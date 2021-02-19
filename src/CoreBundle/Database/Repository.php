@@ -115,10 +115,10 @@ class Repository
                     $fields['fields'],
                     $fields['values']
                 );
-
-                if ($this->connection->getConnection()->query($sql))
+                $request = $this->connection->getConnection()->query($sql);
+                if ($request)
                 {
-                    return true;
+                    return $this->connection->getConnection()->lastInsertId();
                 }
                 else {
                     return 'Une erreur est survenue';
@@ -166,9 +166,10 @@ class Repository
             strtolower($this->className),
             (int)$object->getId()
         );
+//        dump($this->connection->getConnection()->query($sql));
         try {
 
-            $this->connection->getConnection()->query($sql);
+            return $this->connection->getConnection()->query($sql);
         }
         catch (\PDOException $exception)
         {
