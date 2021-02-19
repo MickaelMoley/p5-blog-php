@@ -4,6 +4,8 @@
 namespace App\CoreBundle\Database;
 
 use App\CoreBundle\Database\Utils\QuerySimplify;
+use Envms\FluentPDO\Exception;
+use Envms\FluentPDO\Query;
 
 class Repository
 {
@@ -11,11 +13,15 @@ class Repository
     protected $class;
     protected $className;
     protected $previousObject;
+    private $fluent;
+
+    private $db;
 
     public function __construct(){
 
         $this->connection = new Database();
-
+        $this->fluent = new Query($this->connection->getConnection());
+        $this->db = $this->connection->getConfig()['database']['db_name'];
     }
 
     private function getClassName()
@@ -25,18 +31,26 @@ class Repository
     }
 
     /**
-     * Sert à récupérer les models de chaque tables
-     * @param \stdClass $class
-     * @return mixed
+     * Une fonction permettant de sélectionner la table sur laquelle les requêtes SQL vont être effectués
+     * @return string
+     */
+    private function currentContext(): string
+    {
+        return sprintf('%s.%s',$this->db, $this->className);
+    }
+
+    /**
+     * Une fonction qui permet de récupérer tous les instances de la classe actuelle dans la table
+     * @return array|string
      */
     public function findAll()
     {
 
         try {
-            $sql = sprintf('SELECT * FROM `%s`.`%s`', $this->connection->getConfig()['database']['db_name'], strtolower($this->className));
-            $query = $this->connection->getConnection()->query($sql);
-            $objects = array();
-            while ($object = $query->fetchObject($this->class))
+            $query = $this->fluent
+                ->from($this->currentContext());
+            $objects = [];
+            while($object = $query->asObject($this->class)->fetch())
             {
                 $objects[] = $object;
             }
@@ -45,42 +59,54 @@ class Repository
         catch (\PDOException $exception)
         {
             return $exception->getMessage();
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
+
+
     }
 
     /**
-     * Sert à récupérer un objet
+     * Une fonction qui permet de récupérer une instance de classe défini par $id
      * @param $id
      * @return mixed
      */
     public function find(int $id)
     {
         try {
-            $object = $this->connection->getConnection()->query(
-                sprintf('SELECT * FROM `%s`.`%s` WHERE `id` = %s', $this->connection->getConfig()['database']['db_name'], $this->className, $id)
-            )->fetchObject($this->class);
-            return  $object;
+            $query = $this->fluent
+                ->from($this->currentContext())
+                ->where('id', $id);
+
+            return $query->asObject($this->class)->fetch();
         }
         catch (\PDOException $exception)
         {
             return $exception->getMessage();
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
 
     }
 
     /**
-     * Sert à récupérer un objet
-     * @param $id
+     * Une fonction qui permet de récupérer une ou plusieurs instances de classe selon un critère
+     * @param array $criteria
      * @return mixed
      */
-    public function findBy(array $criteria)
+    public function findBy(array $criteria): array
     {
         try {
-            $fields = QuerySimplify::findBy($criteria);
-            $sql = sprintf('SELECT * FROM `%s`.`%s` WHERE %s', $this->connection->getConfig()['database']['db_name'], strtolower($this->className), $fields);
-            $query = $this->connection->getConnection()->query($sql);
+            $query = $this->fluent
+                ->from($this->currentContext());
+
+            foreach ($criteria as $field => $value)
+            {
+                $query = $query->where($field, $value);
+            }
+
             $objects = array();
-            while ($object = $query->fetchObject($this->class))
+            while($object = $query->asObject($this->class)->fetch())
             {
                 $objects[] = $object;
             }
@@ -89,6 +115,8 @@ class Repository
         catch (\PDOException $exception)
         {
             return $exception->getMessage();
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
 
     }
@@ -101,79 +129,41 @@ class Repository
     public function persist($object)
     {
       // Si l'obiet n'a pas d'ID alors on crée une nouvelle instance sinon on la modifie
-        $fieldsMap = [];
-        $fieldsValueMap = [];
         if($object->getId() === null)
         {
 
 
             try {
                 $fields = QuerySimplify::insert($object);
-                $sql = sprintf('INSERT INTO `%s`.`%s` (%s) VALUES (%s)',
-                    $this->connection->getConfig()['database']['db_name'],
-                    strtolower($this->className),
-                    $fields['fields'],
-                    $fields['values']
-                );
-                $request = $this->connection->getConnection()->query($sql);
-                if ($request)
-                {
-                    return $this->connection->getConnection()->lastInsertId();
-                }
-                else {
-                    return 'Une erreur est survenue';
-                }
+                return $this->fluent
+                    ->insertInto($this->currentContext())
+                    ->values($fields)
+                    ->execute();
             }
             catch (\PDOException $exception)
             {
                 return $exception->getMessage();
+            } catch (Exception $e) {
+                return $e->getMessage();
             }
         }
         else {
             //On le met à jour
             try {
-                $sql = sprintf('UPDATE `%s`.`%s` SET %s WHERE `id`= %s',
-                    $this->connection->getConfig()['database']['db_name'],
-                    strtolower($this->className),
-                    implode(',',QuerySimplify::update($object)),
-                    $object->getId()
-                );
+                $fields = QuerySimplify::update($object);
+                return $this->fluent
+                    ->update($this->currentContext())
+                    ->set($fields)
+                    ->where('id', $object->getId())
+                    ->execute();
 
-                if ($this->connection->getConnection()->query($sql))
-                {
-                    return true;
-                }
-                else {
-                    return 'Une erreur est survenue';
-                }
             }
             catch (\PDOException $exception)
             {
                 return $exception->getMessage();
+            } catch (Exception $e) {
+                return $e->getMessage();
             }
-        }
-
-    }
-
-    /**
-     * Sert à supprimer un element
-     * @param $object
-     */
-    public function delete($object)
-    {
-        $sql = sprintf('DELETE FROM `%s`.`%s` WHERE %s',
-            $this->connection->getConfig()['database']['db_name'],
-            strtolower($this->className),
-            (int)$object->getId()
-        );
-//        dump($this->connection->getConnection()->query($sql));
-        try {
-
-            return $this->connection->getConnection()->query($sql);
-        }
-        catch (\PDOException $exception)
-        {
-            return $exception->getMessage();
         }
 
     }

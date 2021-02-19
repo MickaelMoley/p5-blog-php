@@ -8,8 +8,7 @@ abstract class QuerySimplify
 {
     public static function insert($object)
     {
-        $fieldsMap = [];
-        $fieldsValueMap = [];
+        $values = [];
 
         $objectProperties = (new \ReflectionObject($object))->getProperties();
 
@@ -18,18 +17,15 @@ abstract class QuerySimplify
             $property->setAccessible(true);
             if($property->getValue($object) !== null && $property->getName() !== 'class')
             {
-                $fieldsMap[] = (string)$property->getName();
-                $fieldsValueMap[] = (string)$property->getValue($object);
+                $values[(string)$property->getName()] = (string)$property->getValue($object);
             }
         }
-        return [
-            'fields' => "`" . implode("`,`", $fieldsMap) . "`",
-            'values' => "'" . implode("','", $fieldsValueMap) . "'"];
+        return $values;
 
     }
     public static function update($object)
     {
-        $sql = [];
+        $values = [];
 
         $objectProperties = (new \ReflectionObject($object))->getProperties();
 
@@ -38,10 +34,10 @@ abstract class QuerySimplify
             $property->setAccessible(true);
             if($property->getValue($object) !== null && $property->getName() !== 'class')
             {
-                $sql[] = "`" . $property->getName() . "`='" . $property->getValue($object) . "'";
+                $values[$property->getName()] = $property->getValue($object);
             }
         }
-        return $sql;
+        return $values;
 
     }
 
