@@ -1,0 +1,26 @@
+<form action="">
+
+    <div>
+        <label for="form[title]">
+            Titre de l'article
+        </label>
+        <input type="text" name="form[title]" value="{{ form.title }}">
+    </div>
+    <div>
+        Crée le {{ form.created_at }} - Modifié le {{  form.updated_at }}
+    </div>
+    <div>
+        <label for="form[excerpt]">
+           Extrait de l'article
+        </label>
+        <textarea name="form[excerpt]" id="" cols="30" rows="10">{{ form.excerpt }}</textarea>
+    </div>
+    <div>
+        <label for="form[content]">
+            Contenu de l'article
+        </label>
+        <textarea name="form[content]" id="" cols="30" rows="10">{{ form.content }}</textarea>
+    </div>
+    <button type="submit" name="btn_submit">Enregistrer les modifications</button>
+
+</form>

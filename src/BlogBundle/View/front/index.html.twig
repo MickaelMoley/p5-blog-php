@@ -1,9 +1,14 @@
-<html>
-    <head>
-        <meta charset="utf-8">
-    </head>
-<body>
-<h1>Hello world with {{ name }}</h1>
-<pre>{{ params }}</pre>
-</body>
-</html>
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock stylesheets %}
+
+{% block body %}
+    <h1>hello there !</h1>
+{% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock javascripts %}
+

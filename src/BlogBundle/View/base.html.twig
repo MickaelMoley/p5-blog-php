@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title> {% block title %} {% endblock title %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="assets/css/main.css">
+        {% endblock stylesheets %}
+    </head>
+    <body>
+
+    {% block body %}{% endblock body %}
+
+    {% block javascripts %}
+        <script src="assets/js/start.js"></script>
+    {% endblock %}
+    </body>
+</html>

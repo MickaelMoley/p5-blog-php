@@ -1,0 +1,5 @@
+database:
+  host: 127.0.0.1
+  user: symfony
+  password: Hallucinations0617!K
+  db_name: p5

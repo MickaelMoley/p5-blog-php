@@ -4,12 +4,11 @@
 namespace App\BlogBundle\Repository;
 
 
-use App\BlogBundle\Model\Post;
-use App\BlogBundle\Model\User;
+use App\BlogBundle\Model\Comment;
 use App\CoreBundle\Database\Repository;
 
-class UserRepository extends Repository
+class CommentRepository extends Repository
 {
-    protected $class = User::class;
-    protected $className = User::_className;
+    protected $class = Comment::class;
+    protected $className = Comment::_className;
 }

@@ -1,0 +1,35 @@
+routes:
+  front_controller_index:
+    method: 'GET'
+    path: '/'
+    class: App\BlogBundle\Controller\FrontController
+    action: index
+    name: home_page
+
+  front_controller_edit:
+    method: 'GET'
+    path: '/edit'
+    class: App\BlogBundle\Controller\FrontController
+    action: edit
+    name: edit_page
+
+  post_controller_create:
+    method: 'GET'
+    path: '/post/create'
+    class: App\BlogBundle\Controller\PostController
+    action: create
+    name: create_post
+
+  post_controller_edit:
+    method: 'GET'
+    path: '/post/[i:id]/edit'
+    class: App\BlogBundle\Controller\PostController
+    action: edit
+    name: edit_post
+
+  post_controller_delete:
+    method: 'GET'
+    path: '/post/:i/delete'
+    class: App\BlogBundle\Controller\PostController
+    action: delete
+    name: delete_post

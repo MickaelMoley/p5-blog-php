@@ -1,0 +1,29 @@
+{
+    "name": "micka/p5_blog_mickael_moley",
+    "description": "Un simple blog d\u0000velopp\u0000 en PHP POO/MVC",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Micakel MOLEY",
+            "email": "mickael.moley@outlook.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "symfony/routing": "^5.2",
+      "ext-yaml": "*",
+        "symfony/http-foundation": "^5.2",
+        "ext-pdo": "*",
+        "altorouter/altorouter": "^2.0",
+        "twig/twig": "^3.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+                "App\\": "src/",
+                "Core\\": "app/"
+        }
+    }
+}
