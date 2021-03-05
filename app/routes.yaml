@@ -13,23 +13,30 @@ routes:
     action: edit
     name: edit_page
 
-  post_controller_create:
+  post_controller_list:
     method: 'GET'
-    path: '/post/create'
-    class: App\BlogBundle\Controller\PostController
+    path: '/intranet/post/list'
+    class: App\BlogBundle\Controller\PostControllerAdmin
+    action: list
+    name: list_post
+
+  post_controller_create:
+    method: 'GET, POST'
+    path: '/intranet/post/create'
+    class: App\BlogBundle\Controller\PostControllerAdmin
     action: create
     name: create_post
 
   post_controller_edit:
-    method: 'GET'
-    path: '/post/[i:id]/edit'
-    class: App\BlogBundle\Controller\PostController
+    method: 'GET, POST'
+    path: '/intranet/post/[i:id]/edit'
+    class: App\BlogBundle\Controller\PostControllerAdmin
     action: edit
     name: edit_post
 
   post_controller_delete:
     method: 'GET'
-    path: '/post/[i:id]/delete'
-    class: App\BlogBundle\Controller\PostController
+    path: '/intranet/post/[i:id]/delete'
+    class: App\BlogBundle\Controller\PostControllerAdmin
     action: delete
     name: delete_post

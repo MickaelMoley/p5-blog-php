@@ -30,14 +30,14 @@ class Database {
                 self::$pdo = new PDO("mysql:host=". self::$config['database']['host'] .";dbname=".self::$config['database']['db_name'].";charset=utf8",
                     self::$config['database']['user'], self::$config['database']['password'], [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_CLASS
                     ]);
 
                 return self::$pdo;
             }
             catch (\PDOException $exception)
             {
-                echo $$exception->getMessaage();
+                echo '............' . $exception->getMessage();
             }
 
             return false;

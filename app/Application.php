@@ -41,11 +41,23 @@ class Application
             $this->response->headers->set('Content-Type', 'text/html');
         } else {
             list($controller, $action) = explode('#', $match['target']);
-            $controller = new $controller($this->request, $this->response, $this->router);
+            $params['env'] = $this->config['app']['env'];
+
+
+            $controller = new $controller($this->request, $this->response, $this->router, $params);
             if (is_callable(array($controller, $action))) {
-                $this->reponseContent = call_user_func_array(array($controller, $action), $match['params']);
-                $this->response->setContent($this->reponseContent);
-                $this->response->headers->set('Content-Type', 'text/html');
+                $content = call_user_func_array(array($controller, $action), $match['params']);
+//                dump($content);
+                if(gettype($content) === 'object')
+                {
+                    $this->response = $content;
+                }
+                else if(gettype($content) === 'string')
+                {
+                    $this->response->setContent($content);
+                }
+
+
             } else {
                 $this->reponseContent =  'Error: can not call ' . get_class($controller) . '#' . $action;
 

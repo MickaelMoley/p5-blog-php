@@ -135,6 +135,7 @@ class Repository
 
             try {
                 $fields = QuerySimplify::insert($object);
+                dump($fields);
                 return $this->fluent
                     ->insertInto($this->currentContext())
                     ->values($fields)

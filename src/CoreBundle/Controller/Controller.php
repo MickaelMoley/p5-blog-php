@@ -23,8 +23,9 @@ class Controller
     protected $response;
     private $uniq;
     protected $router;
+    private $params;
 
-    public function __construct(Request $request, Response $response, AltoRouter $router)
+    public function __construct(Request $request, Response $response, AltoRouter $router, $params)
     {
         $this->loader = new FilesystemLoader('../src/BlogBundle/View/');
         $this->twig = new Environment($this->loader, [
@@ -35,16 +36,25 @@ class Controller
         $this->response = $response;
         $this->uniq = 's96699';
         $this->router = $router;
+        $this->params = $params;
+    }
+
+    public function getEnvironnement()
+    {
+        return $this->params['env'];
     }
 
     public function render($template, $params = []): string
     {
         try {
+            //On passe les routes
+            $params['route'] = (array)$this->router->match();
+
             $render = $this->twig->render($template, $params);
 
             if($render)
             {
-                $this->response->setStatusCode(Response::HTTP_OK);
+//                $this->response->setStatusCode(Response::HTTP_OK);
                 return $render;
             }
 
@@ -55,7 +65,11 @@ class Controller
 
     public function redirectToRoute($name, $params = [])
     {
-        return new RedirectResponse($this->router->generate($name, $params));
+        try {
+            return new RedirectResponse($this->router->generate($name, $params));
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     public function getCurrentRoute()
