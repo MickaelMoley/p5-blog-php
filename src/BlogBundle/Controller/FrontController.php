@@ -4,6 +4,7 @@
 namespace App\BlogBundle\Controller;
 
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\CoreBundle\Controller\Controller;
@@ -13,12 +14,16 @@ use Twig\Environment;
 class FrontController extends Controller
 {
 
-    public function index(): string
+    public function index()
     {
 
 
-
-        return $this->render('front/index.html.twig');
+//        dump($this->getEnvironnement());
+//        return $this->render('front/index.html.twig');
+//        return new Response('hello');
+        return new Response('hello',403);
+//        return new JsonResponse(array('data' => 1));
+//        return new JsonResponse(array('data' => 1));
 //        return $this->currentPath();
     }
 

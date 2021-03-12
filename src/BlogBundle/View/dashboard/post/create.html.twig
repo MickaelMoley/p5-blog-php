@@ -1,0 +1,35 @@
+{% extends 'dashboard/base_layout.html.twig' %}
+{% block stylsheets %}
+    {{ parent() }}
+
+{% endblock stylsheets %}
+{% block body %}
+
+
+    <section class="w-100 two_by_one">
+        <div>
+            <h1 class="main-title">Créer un article</h1>
+            {% include 'dashboard/post/form/_form.html.twig' with {'route': route.name}%}
+        </div>
+        <div class="aside">
+            <div class="card">
+                <h2 class="card-title">Informations</h2>
+                <div class="card-body">
+                    <ul>
+                        <li>
+                            <span>Crée le : {{ form.created_at }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+{% endblock body %}
+
+{% block javascripts %}
+    {{  parent() }}
+
+{% endblock javascripts %}

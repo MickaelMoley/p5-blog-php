@@ -38,6 +38,18 @@ $pdo = new PDO("mysql:host=". $config['database']['host'] .";dbname=".$config['d
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
+
+
+//$fluent = new \Envms\FluentPDO\Query($pdo);
+//
+//$query = $fluent
+//    ->from('p5.post')
+//    ->where('id', 1)
+//;
+//
+//dump($query->asObject(Post::class)->fetch());
+
+
 //
 //
 //$user = $pdo->query('SELECT * FROM post LIMIT 1')->fetchObject('Post');
@@ -45,6 +57,12 @@ $pdo = new PDO("mysql:host=". $config['database']['host'] .";dbname=".$config['d
 //$user->setId(5);
 
 try {
+    $commentsRepo = new CommentRepository();
+    $comments = $commentsRepo->findAll();
+
+    dump($comments);
+
+
 //    $database = new Database();
     $newPost = new Post();
     $repo = new PostRepository();

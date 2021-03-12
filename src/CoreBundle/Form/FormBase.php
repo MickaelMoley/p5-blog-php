@@ -30,7 +30,7 @@ class FormBase
 
     public function handleRequest($request)
     {
-        $data = $request->query->get('form');
+        $data = $request->request->get('form');
 
         $objectProperties = (new \ReflectionObject(new $this->class))->getProperties();
 
@@ -38,7 +38,7 @@ class FormBase
             // On met la propriété en public pour pouvoir y accéder
             $property->setAccessible(true);
 //            dump($property->getName(), $this->data[$key]);
-            if(!is_null($data[$property->getName()]))
+            if($data[$property->getName()] !== null)
             {
                 $this->data->{$property->getName()} = $data[$property->getName()];
 
@@ -47,7 +47,7 @@ class FormBase
         }
 
 
-        if($request->query->get('btn_submit') !== null)
+        if($request->request->get('btn_submit') !== null)
         {
             $this->isSubmitted = true;
         }

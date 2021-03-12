@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %} {% endblock title %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="../../../assets/css/dashboard/main.css">
+        {% endblock stylesheets %}
+    </head>
+    <body>
+        <div class="wrapper">
+            <aside>
+                <div class="logo">
+                    <h5>Logo</h5>
+                </div>
+                <ul class="menu">
+                    <li class="menu-item ">
+                        <a href="#"> <i class="fa fa-home"></i> Dashboard</a>
+                    </li>
+                    <li class="menu-item {% if route.name == "edit_post" or route.name == 'list_post'%} active {% endif %}">
+                        <a href="/intranet/post/list"><i class="fa fa-"></i> Articles</a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#"> <i class="fa fa-comment"></i> Commentaires</a>
+                    </li>
+                </ul>
+            </aside>
+           <div class="content">
+               <header>
+                   <nav class="navbar">
+
+                       <div class="menu">
+                           <i class="fa fa-search"></i>
+                           <label>
+                               <input type="text" placeholder="Rechercher un article">
+                           </label>
+                       </div>
+                       <div class="user_block">
+                           <button>Switch Theme</button>
+                           <button>
+{#                               <img src="https://via.placeholder.com/50" alt="">#}
+                           </button>
+                       </div>
+                   </nav>
+
+               </header>
+               <main>
+                 <div class="container">
+                     {% block body %}
+                     {% endblock body %}
+                 </div>
+               </main>
+               <footer>
+
+               </footer>s
+           </div>
+        </div>
+
+
+    {% block javascripts %}{% endblock javascripts %}
+    </body>
+</html>

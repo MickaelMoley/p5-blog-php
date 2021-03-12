@@ -11,16 +11,25 @@ use App\CoreBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PostController extends Controller
+class PostControllerAdmin extends Controller
 {
 
     private $manager;
 
-    public function __construct(Request $request, Response $response, AltoRouter $router)
-    {
-        parent::__construct($request, $response, $router);
 
-        $this->manager = new PostRepository();
+    /**
+     * @param null $params
+     */
+    public function list($params = null)
+    {
+        $postRepo = new PostRepository();
+        $posts = $postRepo->findAll();
+
+
+        return $this->render('dashboard/post/list.html.twig', [
+            'posts' => $posts,
+        ]);
+
     }
 
     /*
@@ -48,7 +57,7 @@ class PostController extends Controller
             return $this->redirectToRoute('edit_post',  ['id' => $lastId]);
         }
 
-        return $this->render('post/create.html.twig');
+        return $this->render('dashboard/post/create.html.twig');
     }
 
     /*
@@ -75,7 +84,7 @@ class PostController extends Controller
         }
 
 
-        return $this->render('post/edit.html.twig', [
+        return $this->render('dashboard/post/edit.html.twig', [
             'form' => $form->createView(),
             'route' => $this->getCurrentRoute()
         ]);
@@ -88,9 +97,11 @@ class PostController extends Controller
     {
         $post = $this->manager->find($params);
 
-        //TODO:: Vérifier que le token est OK
+        if($post)
+        {
+            $this->manager->postDelete($post);
+        }
 
-        $this->manager->delete($post);
-//        return $this->redirectToRoute('create_post', []);
+        return $this->redirectToRoute('list_post', []);
     }
 }
