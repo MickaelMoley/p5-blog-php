@@ -3,13 +3,11 @@
 
 namespace App\BlogBundle\Repository;
 
-use App\BlogBundle\Model\User;
-use App\CoreBundle\Database\Repository;
+use Doctrine\ORM\EntityRepository;
 
-class UserRepository extends Repository
+class UserRepository extends EntityRepository
 {
-    protected $class = User::class;
-    protected $className = User::_className;
+
 
 
 

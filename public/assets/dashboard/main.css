@@ -221,7 +221,7 @@ body {
     FORM
  */
 
-input[type='text'], textarea {
+input[type='text'], textarea, select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -240,7 +240,7 @@ input[type='text'], textarea {
     border-width: 0.15rem;
 }
 
-input[type='text']::-moz-placeholder, textarea::-moz-placeholder {
+input[type='text']::-moz-placeholder, textarea::-moz-placeholder, select {
     --placeholder-opacity:1;
     color:#4c4f52;
     color:rgba(76,79,82,var(--placeholder-opacity))
@@ -261,11 +261,11 @@ input[type='text']::placeholder, textarea::placeholder {
     color:rgba(76,79,82,var(--placeholder-opacity))
 }
 
-input[type='text']:hover, textarea:hover {
+input[type='text']:hover, textarea:hover, select:hover {
     border-color: rgba(226, 232, 240, 0.58);
 }
 
-input[type='text']:focus, textarea:focus{
+input[type='text']:focus, textarea:focus, select:focus{
     border-color: #60A5FA;
 }
 

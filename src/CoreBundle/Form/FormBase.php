@@ -15,7 +15,7 @@ class FormBase
     {
         $this->class = $class;
         $this->data = $data;
-        $this->newData = new $this->class;
+        $this->newData = null;
 
     }
 
@@ -27,10 +27,19 @@ class FormBase
     {
         return $this->data;
     }
+    public function getRequestData()
+    {
+        return $this->newData;
+    }
 
     public function handleRequest($request)
     {
         $data = $request->request->get('form');
+
+//        $methods = get_class_methods($this->data);
+//        dump($methods);
+//        dump($this->data->{$methods[0]}());
+
 
         $objectProperties = (new \ReflectionObject(new $this->class))->getProperties();
 
@@ -40,11 +49,14 @@ class FormBase
 //            dump($property->getName(), $this->data[$key]);
             if($data[$property->getName()] !== null)
             {
-                $this->data->{$property->getName()} = $data[$property->getName()];
-
+//                dump();die;
+                //On appelle la fonction de la classe et on défini la nouvelle valeur
+                $this->data->{sprintf('set%s', ucfirst($property->getName()))}($data[$property->getName()]);
+//                $this->data->set{'title'}($data[$property->getName()]);
             }
 
         }
+        $this->newData = $data;
 
 
         if($request->request->get('btn_submit') !== null)

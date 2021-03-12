@@ -4,11 +4,20 @@
 namespace App\BlogBundle\Repository;
 
 
-use App\BlogBundle\Model\Comment;
-use App\CoreBundle\Database\Repository;
+use App\BlogBundle\Entity\Post;
+use Doctrine\ORM\EntityRepository;
 
-class CommentRepository extends Repository
+class CommentRepository extends EntityRepository
 {
-    protected $class = Comment::class;
-    protected $className = Comment::_className;
+    public function findPublishComments(Post $post)
+    {
+        $query = $this->createQueryBuilder('c')
+            ->leftJoin('c.post', 'p')
+            ->where('c.status = 1 AND p.id = :post')
+            ->orderBy('c.id', 'DESC')
+            ->setParameter(':post', $post->getId())
+        ;
+
+        return $query->getQuery()->getResult();
+    }
 }

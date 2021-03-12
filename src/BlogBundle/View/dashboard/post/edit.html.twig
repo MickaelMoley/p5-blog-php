@@ -5,27 +5,102 @@
 {% endblock stylsheets %}
 {% block body %}
 
-
-    <section class="w-100 two_by_one">
-        <div>
-            <h1 class="main-title">Modifier un article</h1>
-            {% include 'dashboard/post/form/_form.html.twig' with {'route': route.name}%}
-        </div>
-        <div class="aside">
+    <h3 class="text-dark mb-4">Modifier l'article</h3>
+    <form method="post" class="row">
+        <div class="col-lg-8">
             <div class="card">
-                <h2 class="card-title">Informations</h2>
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 font-weight-bold">Information de l'article</p>
+                </div>
                 <div class="card-body">
-                    <ul>
-                        <li>
-                            <span>Crée le : {{ form.created_at }}</span>
-                        </li>
-                    </ul>
+                    <div>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-toggle="tab" href="#tab-1">Gestion de l'article</a></li>
+                            <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-2">Gestion des commentaires</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active py-5" role="tabpanel" id="tab-1">
+                                <div>
+                                    <h6>Article</h6>
+                                    <span>{{ form.post.title }}</span>
+                                </div>
+                                {% include 'dashboard/post/form/_form.html.twig' with {'route': route} %}
+                            </div>
+                            <div class="tab-pane " role="tabpanel" id="tab-2">
+                                <div id="comments_section">
+                                    <h2 class="h4">Liste des commentaires
+                                        {% if form.comments|length == 1 %}
+                                            <small>{{ form.comments|length }} commentaire</small>
+                                        {% else %}
+                                            <small>{{ form.comments|length }} commentaires</small>
+                                        {% endif %}
+                                    </h2>
+                                    <hr>
+{#                                    <form method="post" action="/post/{{ post.id }}/comment">#}
+{#                                        <h3 class="h5 font-weight-bold mb-4">Laissez un commentaire</h3>#}
+{#                                        <div class="form-group">#}
+{#                                            <label for="">Posté en tant que</label>#}
+{#                                            <span class="form-control bg-light">{{ post.author.username }}</span>#}
+{#                                        </div>#}
+{#                                        <div class="form-group">#}
+{#                                            <label for="form[message]">Message</label>#}
+{#                                            <textarea class="form-control" name="form[message]" id=""  rows="3"></textarea>#}
+{#                                        </div>#}
+{#                                        <div>#}
+{#                                            <button class="btn btn-primary">Envoyer</button>#}
+{#                                        </div>#}
+{#                                    </form>#}
+                                    <hr>
+                                    <ul class="list-group">
+                                        {% for comment in form.comments %}
+                                            <li class="list-group-item">
+                                                <div class="media p-1">
+                                                    <div class="media-body">
+                                                        <h5 class="text-dark h6 font-weight-bold mb-0">{{ comment.author.username }} - {% if comment.status == 1 %} <span class="badge badge-dark">Validé par l'administrateur</span> {% endif %}</h5>
+                                                        <small class="d-block mb-3">{{ comment.createdAt|date('d m Y à H:i:s') }}</small>
+                                                        <p class="mb-0">{{ comment.message|nl2br }}</p>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 font-weight-bold">Publication</p>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group"><label>Auteur</label>
+                            <select class="form-control" name="form[author]" id="">
+                                <optgroup label="Sélectionner un auteur">
 
 
-    </section>
+                                    {% for author in users %}
+                                        <option  {% if form.author and form.author.id == user.id %} selected {% endif %} value="{{ author.id }}">{{ author.username }}</option>
+                                    {% endfor %}
+
+                                </optgroup>
+
+
+                            </select>
+                            <small class="form-text text-muted">Modifier l'auteur de l'article</small>
+                        </div>
+                    </form>
+                    <hr>
+                    <h6>Information</h6>
+                    <div><span class="font-weight-bold d-block">Date de modification</span><span class="p-2 bg-light d-block rounded mt-2"><i class="fa fa-clock-o mr-2"></i>{{ form.updatedAt|date('d M Y à H:i:s') }}</span></div>
+                </div>
+            </div>
+        </div>
+    </form>
 
 {% endblock body %}
 

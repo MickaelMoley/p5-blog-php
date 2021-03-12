@@ -5,6 +5,8 @@ use App\BlogBundle\Controller\FrontController;
 use Symfony\Component\HttpFoundation\Request;
 use AltoRouter;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
 
 class Application
 {
@@ -17,7 +19,10 @@ class Application
 
     private $reponseContent;
 
-    public function __construct(Request $request)
+    private $debug = true;
+    private $entityManager;
+
+    public function __construct(Request $request = null)
     {
         $this->request = $request;
         $this->config = yaml_parse_file('../app/env.yaml');
@@ -30,8 +35,11 @@ class Application
      */
     public function process()
     {
+        session_start();
+
         $this->router = new AltoRouter();
         $this->processRoute();
+        $this->processDatabaseManager();
 
         $match = $this->router->match();
         if ($match === false) {
@@ -42,6 +50,7 @@ class Application
         } else {
             list($controller, $action) = explode('#', $match['target']);
             $params['env'] = $this->config['app']['env'];
+            $params['entityManager'] = $this->entityManager;
 
 
             $controller = new $controller($this->request, $this->response, $this->router, $params);
@@ -85,6 +94,24 @@ class Application
         foreach ($file['routes'] as $route)
         {
             $this->router->map($route['method'],$route['path'], sprintf('%s#%s', $route['class'], $route['action']), $route['name']);
+        }
+    }
+
+    public function processDatabaseManager()
+    {
+        // the connection configuration
+        $dbParams = array(
+            'driver'   => 'pdo_mysql',
+            'user'     => 'symfony',
+            'password' => 'Hallucinations0617!K',
+            'dbname'   => 'blog_doctrine',
+        );
+
+        $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__.'/../src/BlogBundle/Entity'), $this->debug,null, null, false);
+        try {
+            return $this->entityManager = EntityManager::create($dbParams, $config);
+        } catch (\Doctrine\ORM\ORMException $e) {
+            echo $e->getMessage();
         }
     }
 

@@ -32,6 +32,7 @@ class Controller
             'cache' => '../var/cache/twig/',
             'debug' => true
         ]);
+
         $this->request = $request;
         $this->response = $response;
         $this->uniq = 's96699';
@@ -44,11 +45,18 @@ class Controller
         return $this->params['env'];
     }
 
+    public function getEntityManager()
+    {
+        return $this->params['entityManager'];
+    }
+
     public function render($template, $params = []): string
     {
         try {
             //On passe les routes
             $params['route'] = (array)$this->router->match();
+//            $params['user'] = $this->getUser();
+           $this->twig->addGlobal('user', $this->getUser());
 
             $render = $this->twig->render($template, $params);
 
@@ -89,5 +97,25 @@ class Controller
     {
         return __DIR__;
     }
+
+    public function getUser()
+    {
+        // TODO:  AJout d'une variable global pour l'utilisateur
+
+        return $_SESSION['user'];
+    }
+
+    public function isGranted(string $role): bool
+    {
+        if(in_array($role, $this->getUser()->getRoles()))
+        {
+            return true;
+        }
+
+        else {
+            return false;
+        }
+    }
+
 
 }
